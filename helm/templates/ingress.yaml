@@ -1,20 +1,19 @@
-{{- range .Values.microservices }}
-{{- if .ingress.enabled }}
+# templates/ingress.yaml
+{{- if .Values.microservice.ingress.enabled }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ .name }}-ingress
+  name: {{ .Values.microservice.name }}-ingress
 spec:
   rules:
-    - host: {{ .ingress.host }}
+    - host: {{ .Values.microservice.ingress.host }}
       http:
         paths:
-          - path: {{ .ingress.path }}
+          - path: {{ .Values.microservice.ingress.path }}
             pathType: Prefix
             backend:
               service:
-                name: {{ .name }}-svc
+                name: {{ .Values.microservice.name }}-svc
                 port:
-                  number: {{ .service.port }}
-{{- end }}
+                  number: {{ .Values.microservice.service.port }}
 {{- end }}
