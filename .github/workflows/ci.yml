@@ -7,24 +7,41 @@ on:
       - 'app/microservice-2/**'
 
 jobs:
-  detect-changes-ms1:
+  check-for-changes:
     runs-on: ubuntu-latest
+    outputs:
+      ms1_changed: ${{ steps.check_ms1.outputs.ms1_changed }}
+      ms2_changed: ${{ steps.check_ms2.outputs.ms2_changed }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
         
       - name: Check for changes in Microservice 1
-        id: check-ms1
+        id: check_ms1
         run: |
           if git diff --name-only HEAD~1 HEAD | grep -q '^app/microservice-1/'; then
-            echo "ms1_changed=true" >> $GITHUB_ENV
+            echo "ms1_changed=true"
+            echo "::set-output name=ms1_changed::true"
           else
-            echo "ms1_changed=false" >> $GITHUB_ENV
+            echo "ms1_changed=false"
+            echo "::set-output name=ms1_changed::false"
+          fi
+
+      - name: Check for changes in Microservice 2
+        id: check_ms2
+        run: |
+          if git diff --name-only HEAD~1 HEAD | grep -q '^app/microservice-2/'; then
+            echo "ms2_changed=true"
+            echo "::set-output name=ms2_changed::true"
+          else
+            echo "ms2_changed=false"
+            echo "::set-output name=ms2_changed::false"
           fi
 
   build-push-ms1:
-    if: env.ms1_changed == 'true'  # Job-level condition
     runs-on: ubuntu-latest
+    needs: check-for-changes
+    if: ${{ needs.check-for-changes.outputs.ms1_changed == 'true' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -59,24 +76,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Use the automatically generated GITHUB_TOKEN
 
-  detect-changes-ms2:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-        
-      - name: Check for changes in Microservice 2
-        id: check-ms2
-        run: |
-          if git diff --name-only HEAD~1 HEAD | grep -q '^app/microservice-2/'; then
-            echo "ms2_changed=true" >> $GITHUB_ENV
-          else
-            echo "ms2_changed=false" >> $GITHUB_ENV
-          fi
-
   build-push-ms2:
-    if: env.ms2_changed == 'true'  # Job-level condition
     runs-on: ubuntu-latest
+    needs: check-for-changes
+    if: ${{ needs.check-for-changes.outputs.ms2_changed == 'true' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
