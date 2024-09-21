@@ -7,7 +7,6 @@ on:
       - 'app/microservice-2/**'
 
 jobs:
-
   detect-changes:
     runs-on: ubuntu-latest
     outputs:
