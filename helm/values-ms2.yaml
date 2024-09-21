@@ -1,0 +1,14 @@
+# values-ms2.yaml
+microservice:
+  name: "microservice-2"
+  image:
+    repository: "kkamal/microservice-2"
+    tag: "latest"
+  service:
+    type: ClusterIP
+    port: 80
+  ingress:
+    enabled: true
+    host: "microservices.example.com"
+    path: "/microservice-2"
+  replicaCount: 2
