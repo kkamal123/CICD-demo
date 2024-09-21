@@ -7,8 +7,37 @@ on:
       - 'app/microservice-2/**'
 
 jobs:
+
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      ms1_changed: ${{ steps.check.outputs.ms1_changed }}
+      ms2_changed: ${{ steps.check.outputs.ms2_changed }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Detect changes for microservice-1 and microservice-2
+        id: check
+        run: |
+          if git diff --name-only HEAD~1 HEAD | grep -q '^app/microservice-1/'; then
+            echo "ms1_changed=true" >> $GITHUB_ENV
+            echo "::set-output name=ms1_changed::true"
+          else
+            echo "ms1_changed=false" >> $GITHUB_ENV
+            echo "::set-output name=ms1_changed::false"
+          fi
+
+          if git diff --name-only HEAD~1 HEAD | grep -q '^app/microservice-2/'; then
+            echo "ms2_changed=true" >> $GITHUB_ENV
+            echo "::set-output name=ms2_changed::true"
+          else
+            echo "ms2_changed=false" >> $GITHUB_ENV
+            echo "::set-output name=ms2_changed::false"
+          fi
+          
   build-push-ms1:
-    if: contains(github.event.pull_request.changed_files.*.filename, 'app/microservice-1/')
+    if: ${{ needs.detect-changes.outputs.ms1_changed == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -45,7 +74,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Use the automatically generated GITHUB_TOKEN
 
   build-push-ms2:
-    if: contains(github.event.pull_request.changed_files.*.filename, 'app/microservice-2/')
+    if: ${{ needs.detect-changes.outputs.ms2_changed == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
