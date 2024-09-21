@@ -34,7 +34,7 @@ jobs:
 
       - name: Update Helm Chart for Microservice 1
         run: |
-          sed -i 's/tag:.*/tag: "${{ steps.vars.outputs.commit_sha }}"/' helm/values-ms1.yaml
+          sed -i 's/tag: ".*"/tag: "${{ steps.vars.outputs.commit_sha }}"/' helm/values-ms1.yaml
           git config --global user.name "kkamal123"
           git config --global user.email "engr.kkamal@gmail.com"
           git commit -m "Update Microservice-1 image tag to ${{ steps.vars.outputs.commit_sha }}"
@@ -71,7 +71,7 @@ jobs:
 
       - name: Update Helm Chart for Microservice 2
         run: |
-          sed -i 's/tag:.*/tag: "${{ steps.vars.outputs.commit_sha }}"/' helm/values-ms2.yaml
+          sed -i 's/tag: ".*"/tag: "${{ steps.vars.outputs.commit_sha }}"/' helm/values-ms2.yaml
           git config --global user.name "kkamal123"
           git config --global user.email "engr.kkamal@gmail.com"
           git commit -m "Update Microservice-2 image tag to ${{ steps.vars.outputs.commit_sha }}"
