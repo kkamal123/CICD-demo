@@ -8,7 +8,7 @@ on:
 
 jobs:
   build-push-ms1:
-    if: contains(fromJson(github.event.commits[0].modified) || fromJson(github.event.commits[0].added), 'app/microservice-1')
+    if: contains(github.event.head_commit.message, 'app/microservice-1/')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -45,7 +45,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Use the automatically generated GITHUB_TOKEN
 
   build-push-ms2:
-    if: contains(fromJson(github.event.commits[0].modified) || fromJson(github.event.commits[0].added), 'app/microservice-2')
+    if: contains(github.event.head_commit.message, 'app/microservice-2/')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
