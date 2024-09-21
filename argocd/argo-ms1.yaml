@@ -4,17 +4,17 @@ metadata:
   name: microservice-1
   namespace: argocd
 spec:
-  destination:
-    namespace: default
-    server: 'https://kubernetes.default.svc'
+  project: default
   source:
     repoURL: 'https://github.com/kkamal123/multi-microservices.git'
     targetRevision: HEAD
-  project: default
     path: helm
     helm:
       valueFiles:
         - values-ms1.yaml
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: default
   syncPolicy:
     automated:
       prune: true
