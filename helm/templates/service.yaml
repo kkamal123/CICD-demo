@@ -1,14 +1,13 @@
-{{- range .Values.microservices }}
+# templates/service.yaml
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .name }}-svc
+  name: {{ .Values.microservice.name }}-svc
 spec:
   selector:
-    app: {{ .name }}
+    app: {{ .Values.microservice.name }}
   ports:
     - protocol: TCP
-      port: {{ .service.port }}
+      port: {{ .Values.microservice.service.port }}
       targetPort: 8080
-  type: {{ .service.type }}
-{{- end }}
+  type: {{ .Values.microservice.service.type }}
