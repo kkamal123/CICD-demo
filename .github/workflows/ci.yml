@@ -13,8 +13,10 @@ jobs:
       ms1_changed: ${{ steps.check_ms1.outputs.ms1_changed }}
       ms2_changed: ${{ steps.check_ms2.outputs.ms2_changed }}
     steps:
-      - name: Checkout code
+      - name: Checkout code with enough history
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
         
       - name: Check for changes in Microservice 1
         id: check_ms1
@@ -45,6 +47,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
         
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
@@ -83,6 +87,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
         
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
