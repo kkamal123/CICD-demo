@@ -1,0 +1,26 @@
+microservices:
+  - name: "microservice-1"
+    image:
+      repository: "kkamal/microservice-1"
+      tag: "latest"
+    service:
+      type: ClusterIP
+      port: 80
+    ingress:
+      enabled: true
+      host: "microservices.example.com"
+      path: "/microservice-1"
+    replicaCount: 2
+
+  - name: "microservice-2"
+    image:
+      repository: "kkamal/microservice-2"
+      tag: "latest"
+    service:
+      type: ClusterIP
+      port: 80
+    ingress:
+      enabled: true
+      host: "microservices.example.com"
+      path: "/microservice-2"
+    replicaCount: 2
