@@ -3,7 +3,7 @@ microservice:
   name: "microservice-2"
   image:
     repository: "kkamal/microservice-2"
-    tag: "latest"
+    tag: "a432e6a"
   service:
     type: ClusterIP
     port: 80
